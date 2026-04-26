@@ -8,7 +8,6 @@
 
 - **Приложение**: https://project-25-frontend-oks8xvt69-anarnurs-projects.vercel.app
 - **Бэкенд API**: https://project23docker-production.up.railway.app
-- **Demo-видео**: (вставь ссылку на Loom/YouTube)
 
 ## 🛠 Стек
 
@@ -35,27 +34,27 @@ app/
 
 ## 🚀 Локальный запуск
 
-1. Клонируй репозиторий:
+1. Клонируйте репозиторий:
 ```bash
    git clone https://github.com/anarnur/project_25_frontend.git
    cd project_25_frontend
 ```
 
-2. Установи зависимости:
+2. Установите зависимости:
 ```bash
    npm install
 ```
 
-3. Создай `.env.local`:
+3. Создайте `.env.local`:
 
 NEXT_PUBLIC_API_URL=https://project23docker-production.up.railway.app
 
-4. Запусти:
+4. Запустите:
 ```bash
    npm run dev
 ```
 
-5. Открой http://localhost:3000
+5. Откройте http://localhost:3000
 
 ## 🔐 Переменные окружения
 
