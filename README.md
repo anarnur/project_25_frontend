@@ -1,36 +1,74 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Project 25 — AI Chat Frontend
 
-## Getting Started
+Чат-интерфейс для дообученной LLM модели. Фронтенд на Next.js подключён к FastAPI бэкенду с поддержкой стриминга токенов в реальном времени.
 
-First, run the development server:
+![AI Chat Screenshot](public/screenshot.png)
 
+## 🔗 Ссылки
+
+- **Приложение**: https://project-25-frontend-oks8xvt69-anarnurs-projects.vercel.app
+- **Бэкенд API**: https://project23docker-production.up.railway.app
+- **Demo-видео**: (вставь ссылку на Loom/YouTube)
+
+## 🛠 Стек
+
+- Next.js 16 (App Router)
+- TypeScript
+- Tailwind CSS
+- FastAPI бэкенд (Project 24) с StreamingResponse
+
+## ⚙️ Архитектура
+
+Стриминг реализован через `fetch` + `response.body.getReader()`. Бэкенд отдаёт токены в формате SSE (`data: {...}\n\n`), фронтенд читает поток и дописывает токены в последнее сообщение через `setMessages(prev => ...)`. Состояние чата хранится в хуке `useChat.ts`.
+
+app/
+├── components/
+│   ├── ChatWindow.tsx     # список сообщений + автоскролл
+│   ├── MessageBubble.tsx  # одно сообщение (user/assistant)
+│   └── PromptInput.tsx    # поле ввода + кнопки Send/Stop
+├── hooks/
+│   └── useChat.ts         # вся логика: state, streaming, AbortController
+├── lib/
+│   ├── api.ts             # fetch + ReadableStream
+│   └── types.ts           # Message, Role, ApiError
+└── page.tsx               # главная страница
+
+## 🚀 Локальный запуск
+
+1. Клонируй репозиторий:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+   git clone https://github.com/anarnur/project_25_frontend.git
+   cd project_25_frontend
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Установи зависимости:
+```bash
+   npm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. Создай `.env.local`:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+NEXT_PUBLIC_API_URL=https://project23docker-production.up.railway.app
 
-## Learn More
+4. Запусти:
+```bash
+   npm run dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+5. Открой http://localhost:3000
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🔐 Переменные окружения
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+| Переменная | Описание |
+|---|---|
+| `NEXT_PUBLIC_API_URL` | URL задеплоенного FastAPI бэкенда |
 
-## Deploy on Vercel
+## ✅ Реализованные функции
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Стриминг ответа токен за токеном
+- История диалога в рамках сессии
+- Кнопка «Стоп» через AbortController
+- Обработка ошибок (сеть, 429, 5xx)
+- Автопрокрутка к последнему сообщению
+- Адаптивный интерфейс
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
