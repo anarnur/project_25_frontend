@@ -26,7 +26,7 @@ export default function Home() {
         </div>
       )}
 
-      <ChatWindow messages={messages} />
+      <ChatWindow messages={messages} isLoading={isLoading} />
 
       <PromptInput
         onSend={sendMessage}
