@@ -1,14 +1,18 @@
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-export async function streamGenerate(
-  prompt: string,
-  onToken: (token: string) => void,
-  signal: AbortSignal
-): Promise<void> {
-  const response = await fetch(`${API_URL}/generate/stream`, {
+export async function sendMessageStream(
+  message: string, 
+  onChunk: (text: string) => void,
+  signal?: AbortSignal // Добавляем поддержку отмены запроса
+) {
+  const response = await fetch(`${API_URL}/generate_stream`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ prompt: `<|system|>You are a helpful AI assistant.</s><|user|>${prompt}</s><|assistant|>`, max_tokens: 256 }),
+    body: JSON.stringify({ 
+      // Исправлено: используем message вместо prompt
+      prompt: `<|system|>You are a helpful AI assistant.</s><|user|>${message}</s><|assistant|>`, 
+      max_tokens: 256 
+    }),
     signal,
   });
 
@@ -19,22 +23,18 @@ export async function streamGenerate(
 
   const reader = response.body!.getReader();
   const decoder = new TextDecoder();
+  let fullText = ""; 
 
   while (true) {
     const { done, value } = await reader.read();
     if (done) break;
 
     const chunk = decoder.decode(value, { stream: true });
-    const lines = chunk.split("\n");
+    
+    // Добавляем новый кусок к общему тексту
+    fullText += chunk;
 
-    for (const line of lines) {
-      if (!line.startsWith("data: ")) continue;
-      const data = line.slice(6).trim();
-      if (data === "[DONE]") return;
-      try {
-        const parsed = JSON.parse(data);
-        if (parsed.text) onToken(parsed.text);
-      } catch {}
-    }
+    // Вызываем функцию обновления UI
+    onChunk(fullText); 
   }
 }
