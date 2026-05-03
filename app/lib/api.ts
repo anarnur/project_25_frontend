@@ -9,9 +9,9 @@ export async function sendMessageStream(
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ 
-      // Исправлено: используем message вместо prompt
-      prompt: `<|system|>You are a helpful AI assistant.</s><|user|>${message}</s><|assistant|>`, 
-      max_tokens: 256 
+
+      prompt: `<|system|>\nYou are a helpful assistant. Provide concise answers.\n</s>\n<|user|>\n${message}\n</s>\n<|assistant|>\n`, 
+  max_tokens: 128 
     }),
     signal,
   });
