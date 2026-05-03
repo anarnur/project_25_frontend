@@ -8,7 +8,7 @@ export async function streamGenerate(
   const response = await fetch(`${API_URL}/generate/stream`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ prompt: `You are a helpful AI assistant. Answer clearly and concisely.\n\nUser: ${prompt}\nAssistant:`, max_tokens: 256 }),
+    body: JSON.stringify({ prompt: `<|system|>You are a helpful AI assistant.</s><|user|>${prompt}</s><|assistant|>`, max_tokens: 256 }),
     signal,
   });
 
