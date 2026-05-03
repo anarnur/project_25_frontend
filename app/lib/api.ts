@@ -37,6 +37,7 @@ export async function sendMessageStream(
     if (done) break;
 
     const chunk = decoder.decode(value, { stream: true });
+    console.log("ПОЛУЧЕН ЧАНК:", chunk);
     fullText += chunk;
 
     // 5. Очистка текста от технических тегов модели
